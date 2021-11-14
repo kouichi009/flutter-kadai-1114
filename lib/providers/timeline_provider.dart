@@ -8,7 +8,7 @@ class TimelineProvider with ChangeNotifier {
 
   // dynamic get lastDocument => _lastDocument;
 
-  int _documentLimit = 2;
+  int _documentLimit = 3;
   bool _hasMore = true;
   List<Post> _posts = [];
   List<UserModel> _userModels = [];
@@ -57,19 +57,20 @@ class TimelineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  updatePost(
-      {int? index,
-      bool? isReadMore,
-      Map<String, dynamic>? likes,
-      int? likeCount}) {
+  updatePost({
+    int? index,
+    Post? post,
+    /*Map<String, dynamic>? likes,
+      int? likeCount*/
+  }) {
     if (_posts == null) return;
     print(_posts);
     print(_posts.length);
     print(_posts[index!]);
     print(_posts[index].isReadMore);
-    if (isReadMore != null) _posts[index].isReadMore = isReadMore;
-    if (likes != null) _posts[index].likes = likes;
-    if (likeCount != null) _posts[index].likeCount = likeCount;
+    if (post?.isReadMore != null) _posts[index].isReadMore = post?.isReadMore;
+    if (post?.likes != null) _posts[index].likes = post?.likes;
+    if (post?.likeCount != null) _posts[index].likeCount = post?.likeCount;
     print(_posts[index].isReadMore);
   }
 

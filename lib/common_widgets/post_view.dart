@@ -13,19 +13,21 @@ import 'package:instagram_flutter02/utilities/themes.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-LikeReadNotifierProvider? _reUseLikeReadNotifierProvider;
+// LikeReadNotifierProvider? _reUseLikeReadNotifierProvider;
 
 class PostView extends StatelessWidget {
   final UserModel? userModel;
   final Post? post;
   final int? index;
-  LikeReadNotifierProvider? parentLikeReadNotifierProvider;
+  String? _currentUid;
+  // LikeReadNotifierProvider? parentLikeReadNotifierProvider;
 
-  PostView(
-      {this.userModel,
-      this.post,
-      this.index,
-      this.parentLikeReadNotifierProvider});
+  PostView({
+    this.userModel,
+    this.post,
+    this.index,
+    /*this.parentLikeReadNotifierProvider*/
+  });
 
   ChangeNotifierProvider? changeNotifierProvider;
   bool isDetailPage = false;
@@ -89,22 +91,20 @@ class PostView extends StatelessWidget {
     // return Text('Post view!!');
     // PostViewProvider postViewProvider = context.watch<PostViewProvider>();
     final authUser = parentContext.watch<User?>();
-
-    if (parentLikeReadNotifierProvider == null &&
-        _reUseLikeReadNotifierProvider != null) {
-      parentLikeReadNotifierProvider = _reUseLikeReadNotifierProvider;
-    } else if (parentLikeReadNotifierProvider != null) {
-      isDetailPage = true;
-      return postTile(context, parentLikeReadNotifierProvider!);
-    }
-    return ChangeNotifierProvider<LikeReadNotifierProvider>(
-      create: (context) =>
-          LikeReadNotifierProvider(post!, authUser!.uid, parentContext, index!)
-            ..init(),
-      builder: (context, child) {
-        final likeReadNotifierProvider =
-            Provider.of<LikeReadNotifierProvider>(context);
-        return postTile(context, likeReadNotifierProvider);
+    _currentUid = authUser?.uid;
+    // if (parentLikeReadNotifierProvider == null &&
+    //     _reUseLikeReadNotifierProvider != null) {
+    //   parentLikeReadNotifierProvider = _reUseLikeReadNotifierProvider;
+    // } else if (parentLikeReadNotifierProvider != null) {
+    //   isDetailPage = true;
+    //   return postTile(context, parentLikeReadNotifierProvider!);
+    // }
+    return Consumer<LikeReadNotifierProvider>(
+      // create: (context) =>
+      //     LikeReadNotifierProvider(post!, authUser!.uid, parentContext, index!)
+      //       ..init(),
+      builder: (context, provider, child) {
+        return postTile(context, provider);
       },
     );
   }
@@ -202,7 +202,10 @@ class PostView extends StatelessWidget {
                           children: <Widget>[
                             LikeButton(
                                 likeReadNotifierProvider:
-                                    likeReadNotifierProvider),
+                                    likeReadNotifierProvider,
+                                index: index,
+                                post: post,
+                                currentUid: _currentUid),
                           ],
                         ),
                       ],
@@ -215,31 +218,38 @@ class PostView extends StatelessWidget {
         ],
       ),
       onTap: () async {
-        if (isDetailPage) return;
-        LikeReadNotifierProvider result = await Navigator.of(context).push(
-          // MaterialPageRoute(
-          //     builder: (context) => PostDetailScreen(
-          //           post: post,
-          //           userModel: userModel,
-          //           index: index,
-          //         )),
+        Navigator.push(
+          context,
           MaterialPageRoute(
-            builder: (context) {
-              // return BlogPage(blogPost: post);
-              return ChangeNotifierProvider.value(
-                value: likeReadNotifierProvider,
-                child: PostDetailScreen(
-                  post: post,
-                  userModel: userModel,
-                  index: index,
-                ),
-              );
-            },
+            builder: (context) =>
+                PostDetailScreen(post: post, userModel: userModel, index: 0),
           ),
         );
-        LikeReadNotifierProvider likeread = result;
-        _reUseLikeReadNotifierProvider = likeread;
-        print('result: $_reUseLikeReadNotifierProvider!!!!!!@@@@@@@@@@@');
+        // if (isDetailPage) return;
+        // LikeReadNotifierProvider result = await Navigator.of(context).push(
+        //   // MaterialPageRoute(
+        //   //     builder: (context) => PostDetailScreen(
+        //   //           post: post,
+        //   //           userModel: userModel,
+        //   //           index: index,
+        //   //         )),
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       // return BlogPage(blogPost: post);
+        //       return ChangeNotifierProvider.value(
+        //         value: likeReadNotifierProvider,
+        //         child: PostDetailScreen(
+        //           post: post,
+        //           userModel: userModel,
+        //           index: index,
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // );
+        // LikeReadNotifierProvider likeread = result;
+        // _reUseLikeReadNotifierProvider = likeread;
+        // print('result: $_reUseLikeReadNotifierProvider!!!!!!@@@@@@@@@@@');
       },
     );
   }

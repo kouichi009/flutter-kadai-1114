@@ -63,27 +63,34 @@ class PostGridView extends StatelessWidget {
   goToDetailPost(
       index, post, LikeReadNotifierProvider likeReadNotifierProvider) async {
     UserModel userModel = await AuthService.getUser(post.uid);
-    Navigator.of(_context!).push(
+    Navigator.push(
+      _context!,
       MaterialPageRoute(
-        builder: (context) {
-          return ChangeNotifierProvider.value(
-            value: likeReadNotifierProvider,
-            child: PostDetailScreen(
-              post: post,
-              userModel: userModel,
-              index: index,
-            ),
-          );
-        },
+        builder: (context) =>
+            PostDetailScreen(post: post, userModel: userModel, index: 0),
       ),
     );
+    // Navigator.of(_context!).push(
+    //   MaterialPageRoute(
+    //     builder: (context) {
+    //       return ChangeNotifierProvider.value(
+    //         value: likeReadNotifierProvider,
+    //         child: PostDetailScreen(
+    //           post: post,
+    //           userModel: userModel,
+    //           index: index,
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   PostTile(index, post) {
     return ChangeNotifierProvider<LikeReadNotifierProvider>(
       create: (context) =>
-          LikeReadNotifierProvider(post!, currentUid!, _context!, index!)
-            ..init(),
+          LikeReadNotifierProvider(/*post!, currentUid!, _context!, index!*/)
+            ..init(post!, currentUid!, _context!, index!),
       builder: (context, child) {
         final likeReadNotifierProvider =
             Provider.of<LikeReadNotifierProvider>(context);

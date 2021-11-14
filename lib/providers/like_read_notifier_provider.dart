@@ -9,13 +9,13 @@ import 'package:instagram_flutter02/services/api/post_service.dart';
 import 'package:provider/provider.dart';
 
 class LikeReadNotifierProvider extends ChangeNotifier {
-  final Post _post;
-  final String _currentUid;
-  final BuildContext _context;
-  final int _index;
+  late Post? _post;
+  late String? _currentUid;
+  late BuildContext? _context;
+  late int? _index;
 
   LikeReadNotifierProvider(
-      this._post, this._currentUid, this._context, this._index);
+      /* this._post, this._currentUid, this._context, this._index*/);
 
   bool _isLiked = false;
   int _likeCount = 0;
@@ -36,38 +36,51 @@ class LikeReadNotifierProvider extends ChangeNotifier {
   bool get isShowHeart => _isShowHeart;
   ProfileProvider get profileProvider => _profileProvider;
 
-  void init() {
-    print(_post.id);
-    print(_post.likes?[_currentUid]);
-    print(_currentUid);
-
-    _isLiked = _post.likes?[_currentUid] == true;
-    _likeCount = _post.likeCount!;
-    _timelineProvider = _context.watch<TimelineProvider>();
-    _profileProvider = _context.watch<ProfileProvider>();
+  void init(Post? post, String? currentUid, BuildContext? context, int? index) {
+    print(post!.id);
+    print(currentUid);
+    print(index);
+    print(post.likes?[currentUid]);
+    print(currentUid);
+    _post = post;
+    _context = context;
+    _currentUid = currentUid;
+    _isLiked = post.likes?[currentUid] == true;
+    _likeCount = post.likeCount!;
+    _index = index;
+    _timelineProvider = context!.watch<TimelineProvider>();
+    // _profileProvider = context.watch<ProfileProvider>();
   }
 
-  void toggleLike() async {
+  void toggleLike(int index, Post post) async {
+    print(index);
+    print(post.id);
+    print('aaaaaaaaaaaaaaaaaaa');
+    // return;
+    bool isLiked = post.likes![_currentUid] == true;
     if (isLoading) return;
     isLoading = true;
     // bool _isLiked = widget.post?.likes[widget.currentUid] == true;
     // if (isPushingLike == false) {
     //   isPushingLike = true;
-    if (_isLiked /* && type == 'single'*/) {
-      await PostService.unLikePost(_currentUid, _post);
-      _likeCount -= 1;
-      _isLiked = false;
+    if (post.likes![_currentUid] == true /* && type == 'single'*/) {
+      await PostService.unLikePost(_currentUid, post);
+      post.likeCount = post.likeCount! - 1;
+      post.likes![_currentUid!] = false;
+      post.isLiked = false;
+
       // setState(() {
       //   _likeCount -= 1;
       //   _isLiked = false;
       //   // likes[widget.currentUid] = false;
       // });
 
-    } else if (!_isLiked) {
-      await PostService.likePost(_currentUid, _post);
+    } else if (!post.likes![_currentUid]) {
+      await PostService.likePost(_currentUid, post);
       // setState(() {
-      _likeCount += 1;
-      _isLiked = true;
+      post.likeCount = post.likeCount! + 1;
+      post.likes![_currentUid!] = true;
+      post.isLiked = true;
       //   if (type == "double") {
       //     showHeart = true;
       //   }
@@ -86,14 +99,13 @@ class LikeReadNotifierProvider extends ChangeNotifier {
     _isShowHeart = false;
     isLoading = false;
 
-    Map<String, dynamic> _likes = {};
-    _likes[_currentUid] = _isLiked;
+    // Map<String, dynamic> _likes = {};
+    // _likes[_currentUid!] = _isLiked;
 
-    _timelineProvider.updatePost(
-        index: _index, likes: _likes, likeCount: _likeCount);
+    _timelineProvider.updatePost(index: index, post: post);
 
-    _profileProvider.updatePost(
-        index: _index, likes: _likes, likeCount: _likeCount);
+    // _profileProvider.updatePost(
+    //     index: _index, likes: _likes, likeCount: _likeCount);
 
     notifyListeners();
   }
@@ -101,7 +113,7 @@ class LikeReadNotifierProvider extends ChangeNotifier {
   void toggleReadMore() {
     _isReadMore = !_isReadMore;
     print('toggleReadMore@@@@@@@');
-    _timelineProvider.updatePost(index: _index, isReadMore: _isReadMore);
+    _timelineProvider.updatePost(index: _index, post: Post());
     notifyListeners();
   }
 
@@ -109,6 +121,6 @@ class LikeReadNotifierProvider extends ChangeNotifier {
     if (_isLiked) return;
     _isShowHeart = true;
     notifyListeners();
-    toggleLike();
+    toggleLike(0, Post());
   }
 }

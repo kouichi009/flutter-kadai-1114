@@ -27,12 +27,12 @@ class PostDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     print(post?.id);
     final authUser = context.watch<User?>();
-    _profileProvider = context.watch<ProfileProvider>();
+    // _profileProvider = context.watch<ProfileProvider>();
     _timelineProvider = context.watch<TimelineProvider>();
-    _likeReadNotifierProvider = context.watch<LikeReadNotifierProvider>();
+    // _likeReadNotifierProvider = context.watch<LikeReadNotifierProvider>();
 
     print(authUser);
-    print(_likeReadNotifierProvider);
+    print(_timelineProvider);
     // final likeReadNotifierProvider =
     //     Provider.of<LikeReadNotifierProvider>(context);
     return Scaffold(
@@ -59,10 +59,11 @@ class PostDetailScreen extends StatelessWidget {
         body: ListView(
           children: <Widget>[
             PostView(
-                userModel: userModel,
-                post: post,
-                index: index,
-                parentLikeReadNotifierProvider: _likeReadNotifierProvider),
+              userModel: userModel,
+              post: post,
+              index:
+                  index, /*parentLikeReadNotifierProvider: _likeReadNotifierProvider*/
+            ),
           ],
         ));
   }

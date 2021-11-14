@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
               create: (context) => CameraProvider()),
           ChangeNotifierProvider<ProfileProvider>(
               create: (context) => ProfileProvider()),
-          // ChangeNotifierProvider<PostViewProvider>(
-          //     create: (context) => PostViewProvider()),
+          ChangeNotifierProvider<LikeReadNotifierProvider>(
+              create: (context) => LikeReadNotifierProvider()),
           // StreamProvider<List<BlogPost>>(
           //   initialData: [],
           //   create: (context) => blogPosts(),

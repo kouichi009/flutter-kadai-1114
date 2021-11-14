@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_flutter02/common_widgets/app_header.dart';
 import 'package:instagram_flutter02/common_widgets/post_view.dart';
+import 'package:instagram_flutter02/models/post.dart';
+import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:instagram_flutter02/providers/bottom_navigation_bar_provider.dart';
 import 'package:instagram_flutter02/providers/timeline_provider.dart';
@@ -10,7 +13,9 @@ class TimelineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BuildContext parentContext = context;
     final timelineProvider = context.watch<TimelineProvider>();
+    final currentUid = context.watch<User>().uid;
     // if (_movies.length != 0) {
     return Scaffold(
       appBar: AppHeader(
@@ -39,6 +44,11 @@ class TimelineScreen extends StatelessWidget {
                 : ListView.builder(
                     itemCount: timelineProvider.posts.length,
                     itemBuilder: (context, index) {
+                      Post? pos = timelineProvider.posts[index];
+                      print(pos);
+                      parentContext.watch<LikeReadNotifierProvider>()
+                        ..init(pos, currentUid, parentContext, index);
+
                       return new GestureDetector(
                         //You need to make my child interactive
                         onTap: () => null,
