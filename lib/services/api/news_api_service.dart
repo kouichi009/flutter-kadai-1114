@@ -5,17 +5,8 @@ import 'package:http/http.dart';
 import 'package:instagram_flutter02/models/news/article_model.dart';
 
 class ApiService {
-  //let's add an Endpoint URL, you can check the website documentation
-  // and learn about the different Endpoint
-  //for this example I'm going to use a single endpoint
-
-  //NOTE: make sure to use your OWN apikey, you can make a free acount and
-  // choose a developer option it's FREE
   final endPointUrl =
       'https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${dotenv.env['NEWSAPIKEY']}';
-
-  //Now let's create the http request function
-  // but first let's import the http package
 
   Future<List<Article>> getArticle() async {
     Response res = await get(Uri.parse(endPointUrl));

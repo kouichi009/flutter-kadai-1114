@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:instagram_flutter02/common_widgets/custom_cached_image.dart';
 import 'package:instagram_flutter02/models/post.dart';
 import 'package:instagram_flutter02/models/user_model.dart';
-import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
 import 'package:instagram_flutter02/providers/post_list_provider.dart';
 import 'package:instagram_flutter02/providers/profile_provider.dart';
 import 'package:instagram_flutter02/screens/post_detail_screen.dart';
@@ -23,25 +22,8 @@ class PostGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _context = context;
-    // return ChangeNotifierProvider<LikeReadNotifierProvider>(
-    //   create: (context) =>
-    //       LikeReadNotifierProvider(post!, authUser!.uid, _context, index!)
-    //         ..init(),
-    //   builder: (context, child) {
-    //     final likeReadNotifierProvider =
-    //         Provider.of<LikeReadNotifierProvider>(context);
-    //     return buildProfilePosts();
-    //   },
-    // );
+
     return buildProfilePosts();
-    // return ChangeNotifierProvider<ProfileProvider>(
-    //   create: (context) => ProfileProvider(),
-    //   builder: (context, child) {
-    //     // _context = context;
-    //     _profileProvider = Provider.of<ProfileProvider>(context);
-    //     return buildProfilePosts();
-    //   },
-    // );
   }
 
   buildProfilePosts() {
@@ -73,19 +55,9 @@ class PostGridView extends StatelessWidget {
   }
 
   PostTile(index, post) {
-    // return Text('data');
-    // ChangeNotifierProvider<LikeReadNotifierProvider>(
-    //   create: (context) =>
-    //       LikeReadNotifierProvider(/*post!, currentUid!, _context!, index!*/)
-    //         ..init(post!, currentUid!, _context!, index!),
-    //   builder: (context, child) {
-    //     final likeReadNotifierProvider =
-    //         Provider.of<LikeReadNotifierProvider>(context);
     return GestureDetector(
       onTap: () => goToDetailPost(index, post),
       child: customCachedImage(post.photoUrl),
     );
-    //   },
-    // );
   }
 }

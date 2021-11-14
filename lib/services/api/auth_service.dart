@@ -22,7 +22,6 @@ class AuthService {
       String uid = signedInUser!.uid;
       final timestamp = FieldValue.serverTimestamp();
       String name = email.substring(0, email.indexOf('@'));
-      print(name);
 
       usersRef.doc(uid).set({
         'name': name,
@@ -57,21 +56,4 @@ class AuthService {
     UserModel userModel = UserModel.fromDoc(documentSnapshot);
     return userModel;
   }
-
-  // static Stream<User> onAuthStateChanged() async {
-  //   try {
-  //     final user = await FirebaseAuth.instance.authStateChanges();
-  //     return user;
-  //     if (user is User) {
-  //       print('user1');
-  //     }
-  //     if (user is UserCredential) {
-  //       print('user2');
-  //     }
-  //     print("login success@@@@@@@ $user");
-  //     // return user;
-  //   } on PlatformException catch (err) {
-  //     throw (err);
-  //   }
-  // }
 }

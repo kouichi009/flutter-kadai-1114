@@ -32,12 +32,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     _profileProvider = Provider.of<ProfileProvider>(context, listen: false);
     _profileProvider?..initEditPage(authUser.uid);
-
-    print('profileScreen init!!!!!!!!!!!!!!');
   }
 
   buildProfileHeader() {
-    print('buildProfileHeader');
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -112,18 +109,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   getBackgroundImage() {
-    print(_profileProvider);
-    print(_profileProvider?.file);
     if (_profileProvider?.file != null) {
       return FileImage(_profileProvider!.file!);
     } else if (_profileProvider?.profileImageUrl != null) {
       return CachedNetworkImageProvider(_profileProvider!.profileImageUrl!);
     }
-
-    // backgroundImage: FileImage(file!),
-    //               backgroundImage: CachedNetworkImageProvider(
-    //                   widget.userModel!.profileImageUrl),
-    // return
   }
 
   handleImage(type) async {
@@ -141,24 +131,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (file == null) return;
     final imageTemporary = File(file.path);
     _profileProvider?.file = imageTemporary;
-    // setState(() {
-    //   this.file = imageTemporary;
-    // });
   }
-
-  // upload() async {
-  //   final downloadUrl = await uploadImage(this.file);
-
-  //   postsRef.doc(postId).set({
-  //     "id": postId,
-  //     "uid": widget.currentUid,
-  //     "photoUrl": downloadUrl,
-  //     "likeCount": 0,
-  //     "timestamp": timestamp,
-  //     "caption": captionController.text,
-  //     "likes": {},
-  //   });
-  // }
 
   Future<String> uploadImage(imageFile) async {
     final Reference storageRef = FirebaseStorage.instance.ref();
@@ -170,9 +143,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   updateProfile() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
     String? downloadUrl = _profileProvider!.profileImageUrl;
     if (_profileProvider!.file != null) {
       downloadUrl = await uploadImage(_profileProvider!.file);
@@ -192,17 +162,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     userModel.profileImageUrl = downloadUrl;
 
     _profileProvider!.userModel = userModel;
-    // _profileProvider!.callNotifiyListners();
-    // setState(() {
-    //   isLoading = false;
-    // });
-    Navigator.pop(context, 'updated');
+
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     context.watch<ProfileProvider>();
-    print(_profileProvider!.isLoading!);
     return Scaffold(
       appBar: AppHeader(
         isAppTitle: false,
@@ -263,10 +229,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       activeColor: Colors.blue,
                       onChanged: (value) {
                         _profileProvider?.updateGender(value);
-                        // setState(() {
-                        //   _radioSelected = 1;
-                        //   _radioVal = MALE;
-                        // });
                       },
                     ),
                     Text('女'),
@@ -276,11 +238,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       activeColor: Colors.pink,
                       onChanged: (value) {
                         _profileProvider?.updateGender(value);
-
-                        // setState(() {
-                        //   _radioSelected = 2;
-                        //   _radioVal = FEMALE;
-                        // });
                       },
                     )
                   ],
@@ -310,11 +267,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                 )
-                // buildpostType(),
-                // _buildGridPosts(),
-                // RefreshIndicator(
-                //     onRefresh: () => queryPosts(), child: _buildDisplayPosts())
-                // PostGridView(posts: []),
               ],
             ),
     );

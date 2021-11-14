@@ -4,10 +4,8 @@ import 'package:instagram_flutter02/common_widgets/app_header.dart';
 import 'package:instagram_flutter02/common_widgets/post_view.dart';
 import 'package:instagram_flutter02/models/post.dart';
 import 'package:instagram_flutter02/models/user_model.dart';
-import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
 import 'package:instagram_flutter02/providers/post_list_provider.dart';
 import 'package:instagram_flutter02/providers/profile_provider.dart';
-import 'package:instagram_flutter02/providers/timeline_provider.dart';
 import 'package:instagram_flutter02/services/api/post_service.dart';
 import 'package:instagram_flutter02/utilities/constants.dart';
 import 'package:provider/src/provider.dart';
@@ -20,36 +18,15 @@ class PostDetailScreen extends StatelessWidget {
 
   PostDetailScreen({this.post, this.userModel, this.index});
 
-  late LikeReadNotifierProvider _likeReadNotifierProvider;
-  late TimelineProvider _timelineProvider;
   late ProfileProvider _profileProvider;
   late PostListProvider _postListProvider;
 
   @override
   Widget build(BuildContext context) {
-    print(post?.id);
     final authUser = context.watch<User?>();
-    // _profileProvider = context.watch<ProfileProvider>();
-    _timelineProvider = context.watch<TimelineProvider>();
     _postListProvider = context.watch<PostListProvider>();
 
-    // _likeReadNotifierProvider = context.watch<LikeReadNotifierProvider>();
-
-    print(authUser);
-    print(_postListProvider);
-    // final likeReadNotifierProvider =
-    //     Provider.of<LikeReadNotifierProvider>(context);
     return Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('テストアプリ'),
-        //   actions: <Widget>[
-        //     if (widget.currentUid == widget.post?.uid)
-        //       IconButton(
-        //         onPressed: () => handleDeletePost(context),
-        //         icon: Icon(Icons.more_vert),
-        //       ),
-        //   ],
-        // ),
         appBar: AppHeader(
           isAppTitle: false,
           titleText: '詳細ページ',
@@ -73,8 +50,6 @@ class PostDetailScreen extends StatelessWidget {
   }
 
   handleDeletePost(BuildContext parentContext) {
-    // Navigator.pop(parentContext);
-    // return;
     return showDialog(
         context: parentContext,
         builder: (context) {
@@ -99,9 +74,7 @@ class PostDetailScreen extends StatelessWidget {
 
   deletePost(context) async {
     _postListProvider.deletePost(index: index);
-    // _likeReadNotifierProvider.deletePost();
     Navigator.pop(context);
     Navigator.pop(context);
-    // Navigator.pop(context, _likeReadNotifierProvider);
   }
 }

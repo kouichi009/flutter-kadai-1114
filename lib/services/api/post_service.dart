@@ -9,9 +9,6 @@ import 'package:instagram_flutter02/utilities/constants.dart';
 // import 'package:firebase_auth/firebase_auth.dart' hide UserCredential;
 
 class PostService {
-  // static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // static final FirebaseMessaging _messaging = FirebaseMessaging();
-
   dynamic? lastDocument = null;
 
   static Future<Map<String, dynamic>> queryTimeline(

@@ -6,8 +6,6 @@ import 'package:instagram_flutter02/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
 class LaunchScreen extends StatelessWidget {
-  // const LaunchScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final authUser = context.watch<User?>();

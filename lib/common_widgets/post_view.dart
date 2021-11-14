@@ -6,7 +6,6 @@ import 'package:instagram_flutter02/common_widgets/custom_cached_image.dart';
 import 'package:instagram_flutter02/common_widgets/like_button.dart';
 import 'package:instagram_flutter02/models/post.dart';
 import 'package:instagram_flutter02/models/user_model.dart';
-import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
 import 'package:instagram_flutter02/providers/post_list_provider.dart';
 import 'package:instagram_flutter02/screens/post_detail_screen.dart';
 import 'package:instagram_flutter02/utilities/constants.dart';
@@ -88,30 +87,13 @@ class PostView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BuildContext parentContext = context;
-    // return Text('Post view!!');
-    // PostViewProvider postViewProvider = context.watch<PostViewProvider>();
     final authUser = parentContext.watch<User?>();
     _currentUid = authUser?.uid;
-    // if (parentLikeReadNotifierProvider == null &&
-    //     _reUseLikeReadNotifierProvider != null) {
-    //   parentLikeReadNotifierProvider = _reUseLikeReadNotifierProvider;
-    // } else if (parentLikeReadNotifierProvider != null) {
-    //   isDetailPage = true;
-    //   return postTile(context, parentLikeReadNotifierProvider!);
-    // }
-    // return Consumer<LikeReadNotifierProvider>(
-    // create: (context) =>
-    //     LikeReadNotifierProvider(post!, authUser!.uid, parentContext, index!)
-    //       ..init(),
-    // builder: (context, provider, child) {
-    // return Text('aaa');
+
     return postTile(context);
   }
-  // );
-  // }
 
   doubleTap() {
-    print(post?.likes?[_currentUid]);
     if (post?.likes?[_currentUid] == true) return;
     toggleLike();
   }
@@ -128,36 +110,13 @@ class PostView extends StatelessWidget {
     return InkWell(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        // mainAxisAlignment: MainAxisAlignment.start,
-
         children: <Widget>[
           GestureDetector(
             onDoubleTap: () => doubleTap(),
-            // handleLikePost(
-            //     type: 'double',
-            //     post: post,
-            //     // postViewProvider: postViewProvider,
-            //     currentUid: authUser?.uid),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                // height: MediaQuery.of(context).size.width,
                 customCachedImage(post!.photoUrl!),
-                // if (likeReadNotifierProvider.isShowHeart)
-                //   Animator(
-                //     duration: Duration(milliseconds: 300),
-                //     tween: Tween(begin: 0.8, end: 1.4),
-                //     curve: Curves.elasticOut,
-                //     cycles: 0,
-                //     builder: (context, anim, child) => Transform.scale(
-                //       scale: anim.controller.value,
-                //       child: Icon(
-                //         Icons.favorite,
-                //         size: 80.0,
-                //         color: Colors.red,
-                //       ),
-                //     ),
-                //   )
               ],
             ),
           ),
@@ -236,31 +195,6 @@ class PostView extends StatelessWidget {
                 post: post, userModel: userModel, index: index),
           ),
         );
-        // if (isDetailPage) return;
-        // LikeReadNotifierProvider result = await Navigator.of(context).push(
-        //   // MaterialPageRoute(
-        //   //     builder: (context) => PostDetailScreen(
-        //   //           post: post,
-        //   //           userModel: userModel,
-        //   //           index: index,
-        //   //         )),
-        //   MaterialPageRoute(
-        //     builder: (context) {
-        //       // return BlogPage(blogPost: post);
-        //       return ChangeNotifierProvider.value(
-        //         value: likeReadNotifierProvider,
-        //         child: PostDetailScreen(
-        //           post: post,
-        //           userModel: userModel,
-        //           index: index,
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // );
-        // LikeReadNotifierProvider likeread = result;
-        // _reUseLikeReadNotifierProvider = likeread;
-        // print('result: $_reUseLikeReadNotifierProvider!!!!!!@@@@@@@@@@@');
       },
     );
   }

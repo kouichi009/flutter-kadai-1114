@@ -10,8 +10,6 @@ import 'package:instagram_flutter02/utilities/constants.dart';
 import 'package:provider/provider.dart';
 
 class ProfileProvider extends ChangeNotifier {
-  List<Post>? _posts;
-  String? _postType;
   UserModel? _userModel;
   TextEditingController _nameController = TextEditingController();
   int? _radioSelected;
@@ -21,8 +19,6 @@ class ProfileProvider extends ChangeNotifier {
   Map<String, String>? _dateOfBirth;
   bool _isLoading = true;
 
-  List<Post>? get posts => _posts;
-  String? get postType => _postType;
   TextEditingController? get nameController => _nameController;
   int? get radioSelected => _radioSelected;
   String? get radioVal => _radioVal;
@@ -39,10 +35,6 @@ class ProfileProvider extends ChangeNotifier {
 
   set file(File? file) {
     _file = file;
-    notifyListeners();
-  }
-
-  void callNotifiyListners() {
     notifyListeners();
   }
 
@@ -72,37 +64,6 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  queryUserPosts(uid) async {
-    List<Post> posts = await PostService.queryUserPosts(uid);
-    _posts = posts;
-    _postType = MYPOSTS;
-    notifyListeners();
-  }
-
-  queryLikedPosts(uid) async {
-    List<Post> posts = await PostService.queryLikedPosts(uid);
-    _posts = posts;
-    _postType = FAV;
-    notifyListeners();
-  }
-
-  updatePost({int? index, Map<String, dynamic>? likes, int? likeCount}) {
-    if (_posts == null) return;
-    print(_posts);
-    print(_posts?.length);
-    print(_posts?[index!]);
-    print(_posts?[index!].isReadMore);
-    if (likes != null) posts![index!].likes = likes;
-    if (likeCount != null) posts![index!].likeCount = likeCount;
-  }
-
-  deletePost({int? index}) {
-    print(_posts?.length);
-    _posts?.removeAt(index!);
-    print(_posts?.length);
-    notifyListeners();
-  }
-
   void updateDateOfBirth(DateTime? datePicked) {
     _dateOfBirth!['year'] = datePicked!.year.toString();
     _dateOfBirth!['month'] = datePicked.month.toString();
@@ -118,8 +79,6 @@ class ProfileProvider extends ChangeNotifier {
       _radioSelected = 2;
       _radioVal = FEMALE;
     }
-    print(value);
-    print('updateGender');
     notifyListeners();
   }
 }

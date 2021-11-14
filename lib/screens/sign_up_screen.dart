@@ -17,7 +17,6 @@ class SignUpScreen extends StatelessWidget {
     _formKey.currentState?.save();
     if (!_isLoading) {
       _isLoading = true;
-      print(_formKey.currentState!.validate());
       if (!_formKey.currentState!.validate()) return _isLoading = false;
       try {
         await AuthService.signUpUser(_email.trim(), _password.trim());

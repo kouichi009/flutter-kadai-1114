@@ -5,10 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:instagram_flutter02/models/user_model.dart';
 import 'package:instagram_flutter02/providers/bottom_navigation_bar_provider.dart';
 import 'package:instagram_flutter02/providers/camera_provider.dart';
-import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
 import 'package:instagram_flutter02/providers/post_list_provider.dart';
 import 'package:instagram_flutter02/providers/profile_provider.dart';
-import 'package:instagram_flutter02/providers/timeline_provider.dart';
 import 'package:instagram_flutter02/screens/home_screen.dart';
 import 'package:instagram_flutter02/screens/launch_screen.dart';
 import 'package:instagram_flutter02/screens/login_screen.dart';
@@ -42,23 +40,6 @@ class MyApp extends StatelessWidget {
               create: (context) => CameraProvider()),
           ChangeNotifierProvider<ProfileProvider>(
               create: (context) => ProfileProvider()),
-          ChangeNotifierProvider<LikeReadNotifierProvider>(
-              create: (context) => LikeReadNotifierProvider()),
-          ChangeNotifierProvider<TimelineProvider>(
-              create: (context) => TimelineProvider()),
-          // StreamProvider<List<BlogPost>>(
-          //   initialData: [],
-          //   create: (context) => blogPosts(),
-          // ),
-          // ProxyProvider<User?, Future<UserModel?>?>(
-          //     create: (context) => null,
-          //     update: (context, authUser, userModel) async {
-          //       await getUser(authUser);
-          //     }),
-          // Provider<List<StoreItem>>(create: (context) => _storeItems),
-          // ChangeNotifierProvider<CartNotifier>(
-          //   create: (context) => CartNotifier(),
-          // ),
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
@@ -68,9 +49,4 @@ class MyApp extends StatelessWidget {
           home: LaunchScreen(),
         ));
   }
-
-  // Future<UserModel?>? getUser(authUser) async {
-  //   if (authUser == null) return null;
-  //   return await AuthService.getUser(authUser.uid);
-  // }
 }

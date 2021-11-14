@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_flutter02/models/post.dart';
-import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
 import 'package:instagram_flutter02/providers/post_list_provider.dart';
 
 class LikeButton extends StatelessWidget {
@@ -14,8 +13,6 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(currentUid);
-    // print(post?.likes?[currentUid]);
     bool isLiked = false;
     if (post?.likes?[currentUid] == true) {
       isLiked = true;

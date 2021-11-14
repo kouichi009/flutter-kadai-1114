@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:instagram_flutter02/common_widgets/app_header.dart';
 import 'package:instagram_flutter02/common_widgets/post_view.dart';
 import 'package:instagram_flutter02/models/post.dart';
-import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:instagram_flutter02/providers/bottom_navigation_bar_provider.dart';
 import 'package:instagram_flutter02/providers/post_list_provider.dart';
@@ -21,7 +20,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
     super.initState();
     Provider.of<PostListProvider>(context, listen: false)..init();
     Provider.of<PostListProvider>(context, listen: false).getQueryTimeline();
-    print('aaaa!!!!!!!!!!!!!!');
   }
 
   refresh(PostListProvider? _postListProvider) async {
@@ -53,11 +51,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
               : ListView.builder(
                   itemCount: _postListProvider?.posts?.length,
                   itemBuilder: (context, index) {
-                    // Post? pos = _postListProvider?.posts?[index];
-                    // print(pos);
-                    // parentContext.watch<LikeReadNotifierProvider>()
-                    //   ..init(pos, currentUid, parentContext, index);
-
                     return new GestureDetector(
                       //You need to make my child interactive
                       onTap: () => null,
@@ -71,20 +64,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
                   },
                 ),
         ),
-        // _isLoading
-        //     ? Container(
-        //         width: MediaQuery.of(context).size.width,
-        //         padding: EdgeInsets.all(5),
-        //         color: Colors.yellowAccent,
-        //         child: Text(
-        //           'Loading',
-        //           textAlign: TextAlign.center,
-        //           style: TextStyle(
-        //             fontWeight: FontWeight.bold,
-        //           ),
-        //         ),
-        //       )
-        //     : Container()
       ]),
     );
   }
@@ -99,11 +78,9 @@ class _TimelineScreenState extends State<TimelineScreen> {
         Provider.of<PostListProvider>(context);
     return Scaffold(
         appBar: AppHeader(
-            isAppTitle: false,
-            titleText: 'タイムラインページ',
-            actionWidget: IconButton(
-                icon: Icon(Icons.check_circle_outline, color: Colors.black),
-                onPressed: () => logout())),
+          isAppTitle: false,
+          titleText: 'タイムラインページ',
+        ),
         body: RefreshIndicator(
             onRefresh: () => refresh(_postListProvider),
             child: _buildDisplayPosts(_postListProvider)));

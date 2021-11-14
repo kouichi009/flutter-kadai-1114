@@ -42,8 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ..init(currentUid);
 
     _postListProvider?.queryUserPosts(currentUid);
-
-    print('profileScreen init!!!!!!!!!!!!!!');
   }
 
   buildProfileHeader() {
@@ -135,17 +133,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  goToEditProfile(userModel) async {
-    final result = await Navigator.push(
+  goToEditProfile(userModel) {
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditProfileScreen(),
       ),
     );
-    print('result: $result');
-    if (result == 'updated') {
-      // _profileProvider?.callNotifiyListners();
-    }
   }
 
   Widget _buildGridPosts() {
@@ -166,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppHeader(
           isAppTitle: false,
-          titleText: '${currentUid}',
+          titleText: 'マイページ',
           actionWidget: IconButton(
               icon: Icon(Icons.check_circle_outline, color: Colors.black),
               onPressed: () => goToNewsApiPage())),
@@ -176,9 +170,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Divider(),
           buildPostType(),
           _buildGridPosts(),
-          // RefreshIndicator(
-          //     onRefresh: () => queryPosts(), child: _buildDisplayPosts())
-          // PostGridView(posts: []),
         ],
       ),
     );

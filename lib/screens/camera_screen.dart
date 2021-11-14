@@ -15,7 +15,6 @@ import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
 class CameraScreen extends StatelessWidget {
-  // const CameraScreen({ Key? key }) : super(key: key);
   TextEditingController captionController = TextEditingController();
 
   String postId = Uuid().v4();
@@ -165,7 +164,6 @@ class CameraScreen extends StatelessWidget {
   }
 
   upload() async {
-    print(_cameraProvider);
     if (_cameraProvider.file == null) return;
     _cameraProvider.updateIsLoding(true);
 
