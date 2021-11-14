@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1038609393961",
+    "project_id": "instagram-flutter-kadai",
+    "storage_bucket": "instagram-flutter-kadai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038609393961:android:9ee2f171edffe4e5b5ef38",
+        "android_client_info": {
+          "package_name": "com.example.instagram_flutter02"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038609393961-c7k3m5n93ucklo2520sckhbs357qlf75.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4PnUGGGffums9DyyyxAjJuroKLd33TdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038609393961-c7k3m5n93ucklo2520sckhbs357qlf75.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1038609393961-v141s4dlkcr0brplm2uqv05lllakqq9d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.instagramFlutter02"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
