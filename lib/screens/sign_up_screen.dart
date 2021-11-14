@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram_flutter02/common_widgets/instaDart_richText.dart';
+import 'package:instagram_flutter02/screens/launch_screen.dart';
 import 'package:instagram_flutter02/services/api/auth_service.dart';
 import 'package:instagram_flutter02/utilities/themes.dart';
 
@@ -20,6 +21,12 @@ class SignUpScreen extends StatelessWidget {
       if (!_formKey.currentState!.validate()) return _isLoading = false;
       try {
         await AuthService.signUpUser(_email.trim(), _password.trim());
+        _isLoading = false;
+        Navigator.pushAndRemoveUntil(
+          _context!,
+          MaterialPageRoute(builder: (context) => LaunchScreen()),
+          (Route<dynamic> route) => false,
+        );
       } on PlatformException catch (err) {
         // _showErrorDialog(err.message!);
         throw (err);

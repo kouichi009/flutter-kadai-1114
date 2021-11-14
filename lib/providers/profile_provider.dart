@@ -34,6 +34,7 @@ class ProfileProvider extends ChangeNotifier {
   UserModel? get userModel => _userModel;
   set userModel(UserModel? userModel) {
     _userModel = userModel;
+    notifyListeners();
   }
 
   set file(File? file) {
@@ -45,22 +46,26 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initEditPage(UserModel userModel0) async {
-    UserModel userModel = await AuthService.getUser(userModel0.uid!);
+  void init(String currentUid) async {
+    userModel = await AuthService.getUser(currentUid);
+  }
 
-    _nameController.text = userModel.name!;
-    _profileImageUrl = userModel.profileImageUrl;
+  void initEditPage(String currentUid) async {
+    userModel = await AuthService.getUser(currentUid);
+
+    _nameController.text = userModel!.name!;
+    _profileImageUrl = userModel!.profileImageUrl;
     _dateOfBirth = {
-      'year': userModel.dateOfBirth!['year'],
-      "month": userModel.dateOfBirth!['month'],
-      'day': userModel.dateOfBirth!['day']
+      'year': userModel!.dateOfBirth!['year'],
+      "month": userModel!.dateOfBirth!['month'],
+      'day': userModel!.dateOfBirth!['day']
     };
-    if (userModel.gender == FEMALE) {
+    if (userModel!.gender == FEMALE) {
       _radioSelected = 2;
     } else {
       _radioSelected = 1;
     }
-    _profileImageUrl = userModel.profileImageUrl;
+    _profileImageUrl = userModel!.profileImageUrl;
     _radioVal = '';
     _file = null;
     _isLoading = false;

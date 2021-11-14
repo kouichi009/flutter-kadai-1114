@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   final String? uid;
-  final String? name;
-  final String? profileImageUrl;
-  final Map<String, dynamic>? dateOfBirth;
-  final String? gender;
-  final Timestamp? timestamp;
-  final String? androidNotificationToken;
-  final int? status;
+  String? name;
+  String? profileImageUrl;
+  Map<String, dynamic>? dateOfBirth;
+  String? gender;
+  Timestamp? timestamp;
+  String? androidNotificationToken;
+  int? status;
 
   UserModel({
     this.uid,

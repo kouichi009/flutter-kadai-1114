@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
@@ -14,37 +15,26 @@ import 'package:instagram_flutter02/utilities/constants.dart';
 import 'package:instagram_flutter02/utilities/stateful_wrapper.dart';
 import 'package:provider/provider.dart';
 
-class EditProfileScreen extends StatelessWidget {
-  BuildContext? _context;
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  _EditProfileScreenState createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
   ProfileProvider? _profileProvider;
-  final UserModel? userModel;
 
-  EditProfileScreen({this.userModel});
+  @override
+  void initState() {
+    super.initState();
+    final authUser = Provider.of<User>(context, listen: false);
 
-  // getUser() async {
-  //   // setState(() {
-  //   //   isLoading = true;
-  //   // });
-  //   final userModel = await getUserFromDB();
-  //   nameController.text = userModel.name!;
-  //   profileImageUrl = userModel.profileImageUrl;
-  //   dateOfBirth = {
-  //     'year': userModel.dateOfBirth!['year'],
-  //     "month": userModel.dateOfBirth!['month'],
-  //     'day': userModel.dateOfBirth!['day']
-  //   };
-  //   if (userModel.gender == FEMALE) {
-  //     _radioSelected = 2;
-  //   }
-  //   // setState(() {
-  //   //   isLoading = false;
-  //   // });
-  // }
+    _profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    _profileProvider?..initEditPage(authUser.uid);
 
-  // Future<UserModel> getUserFromDB() async {
-  //   UserModel userModel = await AuthService.getUser(currentUid!);
-  //   return userModel;
-  // }
+    print('profileScreen init!!!!!!!!!!!!!!');
+  }
 
   buildProfileHeader() {
     print('buildProfileHeader');
@@ -100,7 +90,7 @@ class EditProfileScreen extends StatelessWidget {
 
   selectImage() {
     return showDialog(
-      context: _context!,
+      context: context,
       builder: (context) {
         return SimpleDialog(
           title: Text("Create Post"),
@@ -137,7 +127,7 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   handleImage(type) async {
-    Navigator.pop(_context!);
+    Navigator.pop(context);
     ImageSource imageSource;
     if (type == 'camera') {
       imageSource = ImageSource.camera;
@@ -194,143 +184,139 @@ class EditProfileScreen extends StatelessWidget {
       'name': _profileProvider!.nameController!.text,
       'profileImageUrl': downloadUrl,
     });
+
+    UserModel userModel = _profileProvider!.userModel!;
+    userModel.dateOfBirth = _profileProvider!.dateOfBirth;
+    userModel.gender = gender;
+    userModel.name = _profileProvider!.nameController!.text;
+    userModel.profileImageUrl = downloadUrl;
+
+    _profileProvider!.userModel = userModel;
+    // _profileProvider!.callNotifiyListners();
     // setState(() {
     //   isLoading = false;
     // });
-    Navigator.pop(_context!, 'updated');
+    Navigator.pop(context, 'updated');
   }
 
   @override
   Widget build(BuildContext context) {
-    // return Text('aaaaaaaafsd dsfsdfasdf');
-    // _profileProvider = context.read<ProfileProvider?>()
-    //   ?..initEditPage(userModel!);
-    // print(_profileProvider);
-    // print('isLoading $_profileProvider');
-    return StatefulWrapper(
-      onInit: () {
-        _context = context;
-        _profileProvider = context.watch<ProfileProvider?>()
-          ?..initEditPage(userModel!);
-        print(_profileProvider);
-        print('Async done');
-      },
-      // child: Text('aaaa gs sdfas f'),
-      child: Scaffold(
-        appBar: AppHeader(
-          isAppTitle: false,
-          titleText: 'プロフィール編集画面',
-        ),
-        body: (_profileProvider == null || _profileProvider!.isLoading!)
-            ? circularProgress()
-            : ListView(
-                children: <Widget>[
-                  buildProfileHeader(),
-                  Container(
-                    padding: const EdgeInsets.all(20.0),
-                    child: TextField(
-                      controller: _profileProvider!.nameController,
-                      decoration: InputDecoration(
-                        hintText: "名前を入れてください。",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      var datePicked = await DatePicker.showSimpleDatePicker(
-                        context,
-                        initialDate: DateTime(1994),
-                        firstDate: DateTime(1960),
-                        lastDate: DateTime(2020),
-                        dateFormat: "dd-MMMM-yyyy",
-                        locale: DateTimePickerLocale.jp,
-                        looping: true,
-                      );
-                      _profileProvider?.updateDateOfBirth(datePicked);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(20.0),
-                      height: 100.0,
-                      // width: MediaQuery.of(context).size.width * 0.8,
-                      child: Center(
-                          child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: Container(
-                            child: Center(
-                          child: Text(
-                              '${_profileProvider!.dateOfBirth!['year']}年${_profileProvider!.dateOfBirth!['month']}月${_profileProvider!.dateOfBirth!['day']}日'),
-                        )),
-                      )),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('男'),
-                      Radio(
-                        value: 1,
-                        groupValue: _profileProvider!.radioSelected!,
-                        activeColor: Colors.blue,
-                        onChanged: (value) {
-                          _profileProvider?.updateGender(value);
-                          // setState(() {
-                          //   _radioSelected = 1;
-                          //   _radioVal = MALE;
-                          // });
-                        },
-                      ),
-                      Text('女'),
-                      Radio(
-                        value: 2,
-                        groupValue: _profileProvider!.radioSelected!,
-                        activeColor: Colors.pink,
-                        onChanged: (value) {
-                          _profileProvider?.updateGender(value);
-
-                          // setState(() {
-                          //   _radioSelected = 2;
-                          //   _radioVal = FEMALE;
-                          // });
-                        },
-                      )
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: FlatButton(
-                      onPressed: () => updateProfile(),
-                      child: Container(
-                        width: 280.0,
-                        height: 40.0,
-                        child: Text(
-                          '更新ボタン',
-                          style: TextStyle(
-                            color: true ? Colors.black : Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: true ? Colors.blue : Colors.blue,
-                          border: Border.all(
-                            color: true ? Colors.grey : Colors.blue,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                      ),
-                    ),
-                  )
-                  // buildpostType(),
-                  // _buildGridPosts(),
-                  // RefreshIndicator(
-                  //     onRefresh: () => queryPosts(), child: _buildDisplayPosts())
-                  // PostGridView(posts: []),
-                ],
-              ),
+    context.watch<ProfileProvider>();
+    print(_profileProvider!.isLoading!);
+    return Scaffold(
+      appBar: AppHeader(
+        isAppTitle: false,
+        titleText: 'プロフィール編集画面',
       ),
+      body: (_profileProvider == null || _profileProvider!.isLoading!)
+          ? circularProgress()
+          : ListView(
+              children: <Widget>[
+                buildProfileHeader(),
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextField(
+                    controller: _profileProvider!.nameController,
+                    decoration: InputDecoration(
+                      hintText: "名前を入れてください。",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    var datePicked = await DatePicker.showSimpleDatePicker(
+                      context,
+                      initialDate: DateTime(1994),
+                      firstDate: DateTime(1960),
+                      lastDate: DateTime(2020),
+                      dateFormat: "dd-MMMM-yyyy",
+                      locale: DateTimePickerLocale.jp,
+                      looping: true,
+                    );
+                    _profileProvider?.updateDateOfBirth(datePicked);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(20.0),
+                    height: 100.0,
+                    // width: MediaQuery.of(context).size.width * 0.8,
+                    child: Center(
+                        child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: Container(
+                          child: Center(
+                        child: Text(
+                            '${_profileProvider!.dateOfBirth!['year']}年${_profileProvider!.dateOfBirth!['month']}月${_profileProvider!.dateOfBirth!['day']}日'),
+                      )),
+                    )),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('男'),
+                    Radio(
+                      value: 1,
+                      groupValue: _profileProvider!.radioSelected!,
+                      activeColor: Colors.blue,
+                      onChanged: (value) {
+                        _profileProvider?.updateGender(value);
+                        // setState(() {
+                        //   _radioSelected = 1;
+                        //   _radioVal = MALE;
+                        // });
+                      },
+                    ),
+                    Text('女'),
+                    Radio(
+                      value: 2,
+                      groupValue: _profileProvider!.radioSelected!,
+                      activeColor: Colors.pink,
+                      onChanged: (value) {
+                        _profileProvider?.updateGender(value);
+
+                        // setState(() {
+                        //   _radioSelected = 2;
+                        //   _radioVal = FEMALE;
+                        // });
+                      },
+                    )
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: FlatButton(
+                    onPressed: () => updateProfile(),
+                    child: Container(
+                      width: 280.0,
+                      height: 40.0,
+                      child: Text(
+                        '更新ボタン',
+                        style: TextStyle(
+                          color: true ? Colors.black : Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: true ? Colors.blue : Colors.blue,
+                        border: Border.all(
+                          color: true ? Colors.grey : Colors.blue,
+                        ),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                  ),
+                )
+                // buildpostType(),
+                // _buildGridPosts(),
+                // RefreshIndicator(
+                //     onRefresh: () => queryPosts(), child: _buildDisplayPosts())
+                // PostGridView(posts: []),
+              ],
+            ),
     );
   }
 }

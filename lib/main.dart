@@ -6,6 +6,7 @@ import 'package:instagram_flutter02/models/user_model.dart';
 import 'package:instagram_flutter02/providers/bottom_navigation_bar_provider.dart';
 import 'package:instagram_flutter02/providers/camera_provider.dart';
 import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
+import 'package:instagram_flutter02/providers/post_list_provider.dart';
 import 'package:instagram_flutter02/providers/profile_provider.dart';
 import 'package:instagram_flutter02/providers/timeline_provider.dart';
 import 'package:instagram_flutter02/screens/home_screen.dart';
@@ -35,14 +36,16 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<BottomNavigationBarProvider>(
               create: (context) => BottomNavigationBarProvider()),
-          ChangeNotifierProvider<TimelineProvider>(
-              create: (context) => TimelineProvider()..init()),
+          ChangeNotifierProvider<PostListProvider>(
+              create: (context) => PostListProvider()),
           ChangeNotifierProvider<CameraProvider>(
               create: (context) => CameraProvider()),
           ChangeNotifierProvider<ProfileProvider>(
               create: (context) => ProfileProvider()),
           ChangeNotifierProvider<LikeReadNotifierProvider>(
               create: (context) => LikeReadNotifierProvider()),
+          ChangeNotifierProvider<TimelineProvider>(
+              create: (context) => TimelineProvider()),
           // StreamProvider<List<BlogPost>>(
           //   initialData: [],
           //   create: (context) => blogPosts(),

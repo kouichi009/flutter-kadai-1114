@@ -5,6 +5,7 @@ import 'package:instagram_flutter02/common_widgets/post_view.dart';
 import 'package:instagram_flutter02/models/post.dart';
 import 'package:instagram_flutter02/models/user_model.dart';
 import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
+import 'package:instagram_flutter02/providers/post_list_provider.dart';
 import 'package:instagram_flutter02/providers/profile_provider.dart';
 import 'package:instagram_flutter02/providers/timeline_provider.dart';
 import 'package:instagram_flutter02/services/api/post_service.dart';
@@ -22,6 +23,7 @@ class PostDetailScreen extends StatelessWidget {
   late LikeReadNotifierProvider _likeReadNotifierProvider;
   late TimelineProvider _timelineProvider;
   late ProfileProvider _profileProvider;
+  late PostListProvider _postListProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +31,12 @@ class PostDetailScreen extends StatelessWidget {
     final authUser = context.watch<User?>();
     // _profileProvider = context.watch<ProfileProvider>();
     _timelineProvider = context.watch<TimelineProvider>();
+    _postListProvider = context.watch<PostListProvider>();
+
     // _likeReadNotifierProvider = context.watch<LikeReadNotifierProvider>();
 
     print(authUser);
-    print(_timelineProvider);
+    print(_postListProvider);
     // final likeReadNotifierProvider =
     //     Provider.of<LikeReadNotifierProvider>(context);
     return Scaffold(
@@ -59,11 +63,11 @@ class PostDetailScreen extends StatelessWidget {
         body: ListView(
           children: <Widget>[
             PostView(
-              userModel: userModel,
-              post: post,
-              index:
-                  index, /*parentLikeReadNotifierProvider: _likeReadNotifierProvider*/
-            ),
+                userModel: userModel,
+                post: post,
+                index: index,
+                postListProvider: _postListProvider,
+                isDetailPage: true),
           ],
         ));
   }
@@ -94,10 +98,10 @@ class PostDetailScreen extends StatelessWidget {
   }
 
   deletePost(context) async {
-    _timelineProvider.deletePost(index: index);
-    _profileProvider.deletePost(index: index);
+    _postListProvider.deletePost(index: index);
     // _likeReadNotifierProvider.deletePost();
     Navigator.pop(context);
-    Navigator.pop(context, _likeReadNotifierProvider);
+    Navigator.pop(context);
+    // Navigator.pop(context, _likeReadNotifierProvider);
   }
 }

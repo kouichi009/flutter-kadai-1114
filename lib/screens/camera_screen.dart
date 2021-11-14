@@ -166,6 +166,7 @@ class CameraScreen extends StatelessWidget {
 
   upload() async {
     print(_cameraProvider);
+    if (_cameraProvider.file == null) return;
     _cameraProvider.updateIsLoding(true);
 
     final downloadUrl = await uploadImage(_cameraProvider.file);

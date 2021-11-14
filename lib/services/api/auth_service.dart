@@ -25,7 +25,7 @@ class AuthService {
       print(name);
 
       usersRef.doc(uid).set({
-        'name': 'name',
+        'name': name,
         'email': email,
         'profileImageUrl':
             'https://applimura.com/wp-content/uploads/2019/08/twittericon13.jpg',
@@ -50,8 +50,7 @@ class AuthService {
 
   static Future<void> loginUser(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(
-          email: '2@gmail.com', password: '123456');
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on PlatformException catch (err) {
       throw (err);
     }

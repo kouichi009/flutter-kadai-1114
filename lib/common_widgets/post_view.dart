@@ -7,6 +7,7 @@ import 'package:instagram_flutter02/common_widgets/like_button.dart';
 import 'package:instagram_flutter02/models/post.dart';
 import 'package:instagram_flutter02/models/user_model.dart';
 import 'package:instagram_flutter02/providers/like_read_notifier_provider.dart';
+import 'package:instagram_flutter02/providers/post_list_provider.dart';
 import 'package:instagram_flutter02/screens/post_detail_screen.dart';
 import 'package:instagram_flutter02/utilities/constants.dart';
 import 'package:instagram_flutter02/utilities/themes.dart';
@@ -20,17 +21,16 @@ class PostView extends StatelessWidget {
   final Post? post;
   final int? index;
   String? _currentUid;
+  PostListProvider? postListProvider;
+  final bool? isDetailPage;
   // LikeReadNotifierProvider? parentLikeReadNotifierProvider;
 
-  PostView({
-    this.userModel,
-    this.post,
-    this.index,
-    /*this.parentLikeReadNotifierProvider*/
-  });
-
-  ChangeNotifierProvider? changeNotifierProvider;
-  bool isDetailPage = false;
+  PostView(
+      {this.userModel,
+      this.post,
+      this.index,
+      this.postListProvider,
+      this.isDetailPage});
 
   handleLikePost({type, post, postViewProvider, currentUid}) async {
     // final authUser = context.read<User?>();
@@ -46,11 +46,11 @@ class PostView extends StatelessWidget {
     // );
   }
 
-  Widget buildText(LikeReadNotifierProvider likeReadNotifierProvider) {
+  Widget buildText(PostListProvider? postListProvider) {
     int? maxLines;
     TextOverflow? overflow;
     IconData? iconType;
-    if (isDetailPage) {
+    if (isDetailPage!) {
       maxLines = null;
       overflow = TextOverflow.visible;
       iconType = null;
@@ -74,7 +74,7 @@ class PostView extends StatelessWidget {
           style: TextStyle(fontSize: 16),
         )),
         GestureDetector(
-          onTap: () => likeReadNotifierProvider.toggleReadMore(),
+          onTap: () => postListProvider?.toggleReadMore(index, post),
           child: Icon(
             iconType,
             size: 35.0,
@@ -99,28 +99,40 @@ class PostView extends StatelessWidget {
     //   isDetailPage = true;
     //   return postTile(context, parentLikeReadNotifierProvider!);
     // }
-    return Consumer<LikeReadNotifierProvider>(
-      // create: (context) =>
-      //     LikeReadNotifierProvider(post!, authUser!.uid, parentContext, index!)
-      //       ..init(),
-      builder: (context, provider, child) {
-        return postTile(context, provider);
-      },
-    );
+    // return Consumer<LikeReadNotifierProvider>(
+    // create: (context) =>
+    //     LikeReadNotifierProvider(post!, authUser!.uid, parentContext, index!)
+    //       ..init(),
+    // builder: (context, provider, child) {
+    // return Text('aaa');
+    return postTile(context);
+  }
+  // );
+  // }
+
+  doubleTap() {
+    print(post?.likes?[_currentUid]);
+    if (post?.likes?[_currentUid] == true) return;
+    toggleLike();
   }
 
-  Widget postTile(
-      BuildContext context, LikeReadNotifierProvider likeReadNotifierProvider) {
+  toggleLike() {
+    postListProvider!.toggleLike(
+        postListProvider: postListProvider,
+        index: index,
+        post: post,
+        currentUid: _currentUid);
+  }
+
+  Widget postTile(BuildContext context) {
     return InkWell(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         // mainAxisAlignment: MainAxisAlignment.start,
 
         children: <Widget>[
-          // LikeButton(likeNotifier: likeNotifier),
-
           GestureDetector(
-            onDoubleTap: () => likeReadNotifierProvider.toggleShowHeart(),
+            onDoubleTap: () => doubleTap(),
             // handleLikePost(
             //     type: 'double',
             //     post: post,
@@ -131,21 +143,21 @@ class PostView extends StatelessWidget {
               children: <Widget>[
                 // height: MediaQuery.of(context).size.width,
                 customCachedImage(post!.photoUrl!),
-                if (likeReadNotifierProvider.isShowHeart)
-                  Animator(
-                    duration: Duration(milliseconds: 300),
-                    tween: Tween(begin: 0.8, end: 1.4),
-                    curve: Curves.elasticOut,
-                    cycles: 0,
-                    builder: (context, anim, child) => Transform.scale(
-                      scale: anim.controller.value,
-                      child: Icon(
-                        Icons.favorite,
-                        size: 80.0,
-                        color: Colors.red,
-                      ),
-                    ),
-                  )
+                // if (likeReadNotifierProvider.isShowHeart)
+                //   Animator(
+                //     duration: Duration(milliseconds: 300),
+                //     tween: Tween(begin: 0.8, end: 1.4),
+                //     curve: Curves.elasticOut,
+                //     cycles: 0,
+                //     builder: (context, anim, child) => Transform.scale(
+                //       scale: anim.controller.value,
+                //       child: Icon(
+                //         Icons.favorite,
+                //         size: 80.0,
+                //         color: Colors.red,
+                //       ),
+                //     ),
+                //   )
               ],
             ),
           ),
@@ -179,7 +191,6 @@ class PostView extends StatelessWidget {
               ),
             ),
           ),
-
           Column(
             children: <Widget>[
               Row(
@@ -196,13 +207,12 @@ class PostView extends StatelessWidget {
                       children: <Widget>[
                         Container(
                           padding: EdgeInsets.all(5.0),
-                          child: buildText(likeReadNotifierProvider),
+                          child: buildText(postListProvider),
                         ),
                         Row(
                           children: <Widget>[
                             LikeButton(
-                                likeReadNotifierProvider:
-                                    likeReadNotifierProvider,
+                                postListProvider: postListProvider,
                                 index: index,
                                 post: post,
                                 currentUid: _currentUid),
@@ -218,11 +228,12 @@ class PostView extends StatelessWidget {
         ],
       ),
       onTap: () async {
+        if (isDetailPage!) return;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                PostDetailScreen(post: post, userModel: userModel, index: 0),
+            builder: (context) => PostDetailScreen(
+                post: post, userModel: userModel, index: index),
           ),
         );
         // if (isDetailPage) return;

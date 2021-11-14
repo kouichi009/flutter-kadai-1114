@@ -8,7 +8,7 @@ class TimelineProvider with ChangeNotifier {
 
   // dynamic get lastDocument => _lastDocument;
 
-  int _documentLimit = 3;
+  int _documentLimit = 5;
   bool _hasMore = true;
   List<Post> _posts = [];
   List<UserModel> _userModels = [];
