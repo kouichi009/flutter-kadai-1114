@@ -49,11 +49,7 @@ class AuthService {
   }
 
   static Future<void> loginUser(String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-    } on PlatformException catch (err) {
-      throw (err);
-    }
+    await _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
   static Future<UserModel> getUser(String uid) async {

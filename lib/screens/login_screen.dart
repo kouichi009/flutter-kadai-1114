@@ -21,11 +21,13 @@ class LoginScreen extends StatelessWidget {
       if (!_formKey.currentState!.validate()) return _isLoading = false;
       try {
         await AuthService.loginUser(_email.trim(), _password.trim());
+        _isLoading = false;
       } on PlatformException catch (err) {
         // _showErrorDialog(err.message!);
-        throw (err);
+        _isLoading = false;
+
+        // throw (err);
       }
-      _isLoading = false;
     }
   }
 
