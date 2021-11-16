@@ -18,14 +18,14 @@ class _TimelineScreenState extends State<TimelineScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PostListProvider>(context, listen: false)..init();
+    // Provider.of<PostListProvider>(context, listen: false).init();
     Provider.of<PostListProvider>(context, listen: false).getQueryTimeline();
   }
 
   refresh(PostListProvider? _postListProvider) async {
-    _postListProvider?.init();
+    _postListProvider?.refreshQuery();
 
-    Provider.of<PostListProvider>(context, listen: false).getQueryTimeline();
+    // Provider.of<PostListProvider>(context, listen: false).getQueryTimeline();
   }
 
   Widget _buildDisplayPosts(PostListProvider? _postListProvider) {
@@ -35,6 +35,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
           final before = _onScrollNotification.metrics.extentBefore;
           final max = _onScrollNotification.metrics.maxScrollExtent;
           if (before == max) {
+            print('more@@@@@@@@@@@@@@@@@@@@@@');
             _postListProvider?.getQueryTimeline();
             return true;
           }

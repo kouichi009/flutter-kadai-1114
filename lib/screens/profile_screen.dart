@@ -36,8 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final authUser = Provider.of<User>(context, listen: false);
     currentUid = authUser.uid;
 
-    _postListProvider = Provider.of<PostListProvider>(context, listen: false)
-      ..init();
+    _postListProvider = Provider.of<PostListProvider>(context, listen: false);
     _profileProvider = Provider.of<ProfileProvider>(context, listen: false)
       ..init(currentUid);
 

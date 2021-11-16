@@ -17,12 +17,21 @@ class PostListProvider extends ChangeNotifier {
   List<UserModel>? get userModels => _userModels;
   String? get postType => _postType;
 
-  void init() {
-    _posts = [];
-    _userModels = [];
-    _hasMore = true;
-    _lastDocument = null;
-    _postType = null;
+  void refreshQuery() async {
+    final values = await PostService.queryTimeline(_documentLimit, null, true);
+    _lastDocument = values['lastDocument'];
+    _posts = values['posts'];
+    _userModels = values['userModels'];
+    _hasMore = values['hasMore'];
+
+    notifyListeners();
+
+    // _posts = [];
+    // _userModels = [];
+    // _hasMore = true;
+    // _lastDocument = null;
+    // _postType = null;
+    // // notifyListeners();
   }
 
   void getQueryTimeline() async {
